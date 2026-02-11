@@ -1,0 +1,4 @@
+#Wed Feb 11 21:36:56 IRKT 2026
+micronaut:
+  application:
+    name: micronaut_test_music
