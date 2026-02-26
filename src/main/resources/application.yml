@@ -2,3 +2,20 @@
 micronaut:
   application:
     name: micronaut_test_music
+  views:
+    thymeleaf:
+      enabled: true
+      cacheable: false
+  router:
+    static-resources:
+      css:
+        paths: classpath:static/css
+        mapping: /css/**
+
+#logger:
+#  levels:
+#    io.micronaut: DEBUG
+#    io.micronaut.context: TRACE
+#    io.micronaut.web.router: DEBUG
+#    io.micronaut.http.server: DEBUG
+#    org.thymeleaf: DEBUG

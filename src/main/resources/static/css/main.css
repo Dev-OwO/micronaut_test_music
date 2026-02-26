@@ -1,0 +1,96 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #FFE4E1;  /* бледно-красный */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Контейнер для всего содержимого */
+.container {
+    width: 80%;
+    min-width: 600px;
+    margin: 0 auto;
+    flex: 1;
+}
+
+/* Меню */
+.menu {
+    background-color: #8B0000;  /* тёмно-красный */
+    padding: 15px 0;
+    margin-bottom: 40px;
+}
+
+.menu .container {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.menu a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.menu a:hover {
+    text-decoration: underline;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    margin-right: 20px;
+}
+
+/* Основной контент */
+.content {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 40px;
+    background-color: #FFE4E1;
+}
+
+.text-section {
+    flex: 1;
+    width: 50%;
+}
+
+.text-section h1 {
+    color: #8B0000;
+    margin-bottom: 20px;
+    font-size: 36px;
+}
+
+.text-section p {
+    color: #333;
+    font-size: 18px;
+    line-height: 1.6;
+}
+
+.image-section {
+    flex: 1;
+    width: 50%;
+}
+
+.image-section img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Подвал */
+.footer {
+    background-color: #8B0000;
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+    margin-top: auto;
+}
