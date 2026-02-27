@@ -11,6 +11,9 @@ micronaut:
       css:
         paths: classpath:static/css
         mapping: /css/**
+      images:
+        paths: classpath:static/images
+        mapping: /images/**
 
 #logger:
 #  levels:

@@ -1,4 +1,4 @@
-package micronaut_test_music;
+package micronaut_test_music.controller;
 
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Controller;

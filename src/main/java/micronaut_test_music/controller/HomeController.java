@@ -1,4 +1,4 @@
-package micronaut_test_music;
+package micronaut_test_music.controller;
 
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;

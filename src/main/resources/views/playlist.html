@@ -1,0 +1,85 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Плейлист - VplaY</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <style>
+        /* Временные стили для плейлиста, позже вынесем в CSS */
+        .playlist-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .playlist-table th {
+            background-color: #8B0000;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        .playlist-table td {
+            padding: 12px;
+            border-bottom: 1px solid #FFE4E1;
+        }
+        
+        .playlist-table tr:hover {
+            background-color: #FFF0F0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Меню (такое же, как на главной) -->
+    <div class="menu">
+        <div class="container">
+            <a href="/" class="logo">VplaY</a>
+            <a href="/playlist">Плейлист</a>
+            <a href="/add_music">Загрузить</a>
+        </div>
+    </div>
+
+    <!-- Основной контент -->
+    <div class="container">
+        <h1 style="color: #8B0000; margin-bottom: 20px;">Ваш плейлист</h1>
+        
+        <div th:if="${songs.empty}" style="text-align: center; padding: 40px; color: #666;">
+            Пока нет песен. <a href="/add_music" style="color: #8B0000;">Загрузите первую!</a>
+        </div>
+        
+        <table class="playlist-table" th:unless="${songs.empty}">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Название</th>
+                    <th>Исполнитель</th>
+                    <th></th> <!-- для кнопки воспроизведения -->
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="song, iter : ${songs}">
+                    <td th:text="${iter.count}">1</td>
+                    <td th:text="${song.title}">Bohemian Rhapsody</td>
+                    <td th:text="${song.artist}">Queen</td>
+                    <td>
+                        <button style="background-color: #8B0000; color: white; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer;">
+                            ▶
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Подвал -->
+    <div class="footer">
+        <div class="container">
+            VplaY copy 2026
+        </div>
+    </div>
+</body>
+</html>
