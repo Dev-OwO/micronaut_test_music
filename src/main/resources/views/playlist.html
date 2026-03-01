@@ -6,6 +6,7 @@
     <title>Плейлист - VplaY</title>
     <link rel="stylesheet" href="/css/main.css">
 	<link rel="stylesheet" href="/css/playlist.css">
+	<script src="/js/player.js"></script>
 </head>
 <body>
     <!-- Меню -->
@@ -34,8 +35,8 @@
                     
                     <!-- Информация о песне -->
                     <div class="song-info">
-                        <div class="song-title" th:text="${song.title}">Bohemian Rhapsody</div>
-                        <div class="song-artist" th:text="${song.artist}">Queen</div>
+                        <div class="song-title" th:text="${song.title}">Название</div>
+                        <div class="song-artist" th:text="${song.artist}">Исполнитель</div>
                     </div>
                     
                     <div class="song-duration" th:text="${song.formattedDuration}">?:??</div>
@@ -45,8 +46,9 @@
                     
                     <!-- Кнопки действий -->
                     <div class="song-actions">
-                        <button class="btn-play" title="Воспроизвести">▶</button>
-                        <button class="btn-delete" title="Удалить">🗑️</button>
+						<button class="song-btn-play" th:onclick="buttonPlaySong([[${song.id}]], [[${song.title}]], [[${song.artist}]], [[${song.filename}]])"
+							title="Воспроизвести">▶</button>
+                        <button class="song-btn-delete" title="Удалить">🗑️</button>
                     </div>
                 </div>
             </div>
@@ -65,23 +67,23 @@
             <!-- Кнопки управления -->
             <div class="player-controls">
                 <button class="player-btn" title="Предыдущий">⏮</button>
-                <button class="player-btn play-pause" title="Воспроизвести">▶</button>
+                <button class="player-btn play-pause" id="player-btn-play-pause" onclick="buttonPausePlay()" title="Воспроизвести">▶</button>
                 <button class="player-btn" title="Следующий">⏭</button>
             </div>
             
             <!-- Информация о текущем треке -->
             <div class="player-info">
-				<div class="player-song-title" th:text="${songs[0].title}">Название</div>
-				    <div class="player-song-artist" th:text="${songs[0].artist}">Исполнитель</div>
+				<div class="player-song-title" id="player-song-title">Название</div>
+				    <div class="player-song-artist" id="player-song-artist">Исполнитель</div>
             </div>
             
             <!-- Прогресс бар -->
             <div class="player-progress-container">
-                <span class="progress-time">?:??</span>
-                <div class="progress-bar">
-                    <div class="progress-fill"></div>
+                <span class="progress-time" id="progress-time">?:??</span>
+                <div class="progress-bar" onclick="buttonSeek(event)">
+                    <div class="progress-fill" id="progress-fill" style="width: 0%;"></div>
                 </div>
-                <span class="player-duration" th:text="${songs[0].formattedDuration}">?:??</span>
+                <span class="player-duration" id="player-duration">?:??</span>
             </div>
         </div>
     </div>

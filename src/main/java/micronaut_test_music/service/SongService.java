@@ -13,9 +13,11 @@ public class SongService {
     private Long nextId = 1L;
 
     public SongService() {
-    	// Рок-классика (70-80е)
-        songs.add(new Song(nextId++, "Bohemian Rhapsody", "Queen", "bohemian.mp3", 
+    	// тест воспроизведения
+        songs.add(new Song(nextId++, "Shine Like The Sun", "Luke Bergs", "/audio/Luke-Bergs-Shine-Like-The-Sun(chosic.com).mp3", 
             355, LocalDate.of(2026, 2, 15)));
+        
+        // Рок-классика (70-80е)
         songs.add(new Song(nextId++, "Stairway to Heaven", "Led Zeppelin", "stairway.mp3", 
             482, LocalDate.of(2026, 2, 16)));
         songs.add(new Song(nextId++, "Hotel California", "Eagles", "hotel.mp3", 
