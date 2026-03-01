@@ -1,40 +1,14 @@
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Плейлист - VplaY</title>
     <link rel="stylesheet" href="/css/main.css">
-    <style>
-        /* Временные стили для плейлиста, позже вынесем в CSS */
-        .playlist-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        .playlist-table th {
-            background-color: #8B0000;
-            color: white;
-            padding: 12px;
-            text-align: left;
-        }
-        
-        .playlist-table td {
-            padding: 12px;
-            border-bottom: 1px solid #FFE4E1;
-        }
-        
-        .playlist-table tr:hover {
-            background-color: #FFF0F0;
-        }
-    </style>
+	<link rel="stylesheet" href="/css/playlist.css">
 </head>
 <body>
-    <!-- Меню (такое же, как на главной) -->
+    <!-- Меню -->
     <div class="menu">
         <div class="container">
             <a href="/" class="logo">VplaY</a>
@@ -43,42 +17,79 @@
         </div>
     </div>
 
-    <!-- Основной контент -->
-    <div class="container">
-        <h1 style="color: #8B0000; margin-bottom: 20px;">Ваш плейлист</h1>
-        
-        <div th:if="${songs.empty}" style="text-align: center; padding: 40px; color: #666;">
-            Пока нет песен. <a href="/add_music" style="color: #8B0000;">Загрузите первую!</a>
+    <!-- Основной контент с отступом для плеера -->
+    <div class="content-wrapper">
+        <div class="container">
+            <h1 style="color: #8B0000; margin-bottom: 20px;">Ваш плейлист</h1>
+            
+            <!-- Список песен -->
+            <div class="playlist">
+                <div th:if="${songs.empty}" class="playlist-empty">
+                    Пока нет песен. <a href="/add_music" style="color: #8B0000;">Загрузите первую!</a>
+                </div>
+                
+                <div th:each="song : ${songs}" class="song-item">
+                    <!-- Обложка -->
+                    <img src="/images/disk.jpg" alt="cover" class="song-cover">
+                    
+                    <!-- Информация о песне -->
+                    <div class="song-info">
+                        <div class="song-title" th:text="${song.title}">Bohemian Rhapsody</div>
+                        <div class="song-artist" th:text="${song.artist}">Queen</div>
+                    </div>
+                    
+                    <div class="song-duration" th:text="${song.formattedDuration}">?:??</div>
+                    
+                    <!-- Дата добавления (пока заглушка) -->
+                    <div class="song-date" th:text="${song.formattedDate}">??.??.????</div>
+                    
+                    <!-- Кнопки действий -->
+                    <div class="song-actions">
+                        <button class="btn-play" title="Воспроизвести">▶</button>
+                        <button class="btn-delete" title="Удалить">🗑️</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Демо-заметка (потом уберем) -->
+            <div class="demo-note">
+                ⏳ Пока это дизайн. В пункте 5 добавим настоящее воспроизведение,<br>
+                в пункте 6-7 — базу данных и загрузку, а в пункте 9 — удаление.
+            </div>
         </div>
-        
-        <table class="playlist-table" th:unless="${songs.empty}">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Название</th>
-                    <th>Исполнитель</th>
-                    <th></th> <!-- для кнопки воспроизведения -->
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="song, iter : ${songs}">
-                    <td th:text="${iter.count}">1</td>
-                    <td th:text="${song.title}">Bohemian Rhapsody</td>
-                    <td th:text="${song.artist}">Queen</td>
-                    <td>
-                        <button style="background-color: #8B0000; color: white; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer;">
-                            ▶
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
     </div>
 
-    <!-- Подвал -->
-    <div class="footer">
+    <!-- Прикрепленный плеер (нижняя панель) -->
+    <div class="player-bar">
+        <div class="player-container">
+            <!-- Кнопки управления -->
+            <div class="player-controls">
+                <button class="player-btn" title="Предыдущий">⏮</button>
+                <button class="player-btn play-pause" title="Воспроизвести">▶</button>
+                <button class="player-btn" title="Следующий">⏭</button>
+            </div>
+            
+            <!-- Информация о текущем треке -->
+            <div class="player-info">
+				<div class="player-song-title" th:text="${songs[0].title}">Название</div>
+				    <div class="player-song-artist" th:text="${songs[0].artist}">Исполнитель</div>
+            </div>
+            
+            <!-- Прогресс бар -->
+            <div class="player-progress-container">
+                <span class="progress-time">?:??</span>
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+                <span class="player-duration" th:text="${songs[0].formattedDuration}">?:??</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Подвал (немного скорректирован из-за фиксированного плеера) -->
+    <div class="footer" style="margin-bottom: 80px;">
         <div class="container">
-            VplaY copy 2026
+            VplaY © 2026
         </div>
     </div>
 </body>
