@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: vplay
+      changes:
+        - createTable:
+            tableName: songs
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: artist
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: filename
+                  type: VARCHAR(500)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: duration
+                  type: INT
+              - column:
+                  name: added_date
+                  type: DATE

@@ -76,7 +76,30 @@
     	<artifactId>micronaut-views-thymeleaf</artifactId>
     	<scope>compile</scope>
     </dependency>
+    <dependency>
+	    <groupId>io.micronaut.data</groupId>
+	    <artifactId>micronaut-data-hibernate-jpa</artifactId>
+	</dependency>
+    <dependency>
+	    <groupId>io.micronaut.sql</groupId>
+	    <artifactId>micronaut-jdbc-hikari</artifactId>
+	</dependency>
+    <dependency>
+        <groupId>org.xerial</groupId>
+        <artifactId>sqlite-jdbc</artifactId>
+        <version>3.51.2.0</version>
+    </dependency>
+    <dependency>
+	    <groupId>org.liquibase</groupId>
+	    <artifactId>liquibase-core</artifactId>
+	</dependency>
+	<dependency>
+	    <groupId>org.hibernate.orm</groupId>
+	    <artifactId>hibernate-community-dialects</artifactId>
+	    <version>7.0.2.Final</version>
+	</dependency>
   </dependencies>
+  
   <build>
     <plugins>
       <plugin>
@@ -115,6 +138,14 @@
               </exclusions>
             </path>
           </annotationProcessorPaths>
+          <!--<annotationProcessorPaths combine.self="override">
+                    Процессор для генерации репозиториев
+                    <path>
+                        <groupId>io.micronaut.data</groupId>
+                        <artifactId>micronaut-data-processor</artifactId>
+                        <version>${micronaut.data.version}</version>
+                    </path>
+                </annotationProcessorPaths> -->
           <compilerArgs>
             <arg>-Amicronaut.processing.group=micronaut_test_music</arg>
             <arg>-Amicronaut.processing.module=micronaut_test_music</arg>

@@ -3,16 +3,33 @@ package micronaut_test_music.model;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "song")
 public class Song {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+	@Column(nullable = false)
     private String title;
+	@Column(nullable = false)
     private String artist;
+	@Column(nullable = false)
     private String filename;
     private Integer duration; // длительность в секундах
+    @Column(nullable = false)
     private LocalDate addedDate;
+    
+    // Конструктор по умолчанию (обязателен для JPA)
+    public Song() {}
 
-    public Song(Long id, String title, String artist, String filename, Integer duration, LocalDate addedDate) {
-        this.id = id;
+    public Song(String title, String artist, String filename, Integer duration, LocalDate addedDate) {
         this.title = title;
         this.artist = artist;
         this.filename = filename;
