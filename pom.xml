@@ -23,12 +23,12 @@
     <exec.mainClass>micronaut_test_music.Application</exec.mainClass>
   </properties>
 
-  <repositories>
+  <!--<repositories>
     <repository>
       <id>central</id>
       <url>https://repo.maven.apache.org/maven2</url>
     </repository>
-  </repositories>
+  </repositories>-->
 
   <dependencies>
     <dependency>
@@ -116,11 +116,9 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+        
         <configuration>
-          <!-- Uncomment to enable incremental compilation -->
-          <!-- <useIncrementalCompilation>false</useIncrementalCompilation> -->
-
-          <annotationProcessorPaths combine.children="append">
+          <annotationProcessorPaths>
             <path>
               <groupId>io.micronaut</groupId>
               <artifactId>micronaut-http-validation</artifactId>
@@ -137,15 +135,12 @@
                 </exclusion>
               </exclusions>
             </path>
+            <path>
+                <groupId>io.micronaut.data</groupId>
+                <artifactId>micronaut-data-processor</artifactId>
+            </path>
           </annotationProcessorPaths>
-          <!--<annotationProcessorPaths combine.self="override">
-                    Процессор для генерации репозиториев
-                    <path>
-                        <groupId>io.micronaut.data</groupId>
-                        <artifactId>micronaut-data-processor</artifactId>
-                        <version>${micronaut.data.version}</version>
-                    </path>
-                </annotationProcessorPaths> -->
+          
           <compilerArgs>
             <arg>-Amicronaut.processing.group=micronaut_test_music</arg>
             <arg>-Amicronaut.processing.module=micronaut_test_music</arg>
