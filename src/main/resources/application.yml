@@ -27,7 +27,7 @@ datasources:
     driver-class-name: org.sqlite.JDBC
     username: ""
     password: ""
-#    schema-generate: CREATE  # Liquibase управляет схемой
+#    schema-generate: NONE  # Liquibase управляет схемой
 
 jpa:
   default:
@@ -36,14 +36,16 @@ jpa:
     properties:
       hibernate:
         hbm2ddl:
-          auto: update
+          auto: none
         dialect: org.hibernate.community.dialect.SQLiteDialect
         format_sql: true
-      show_sql: true
+        show_sql: true
 
-#liquibase:
-#  enabled: false
-#  change-log: classpath:db/changelog/db.changelog-master.yaml
+liquibase:
+  datasources:
+    default:
+#      enabled: true
+      change-log: classpath:db/changelog/db.changelog-master.yaml
 
 #logger:
 #  levels:

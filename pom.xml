@@ -89,10 +89,10 @@
         <artifactId>sqlite-jdbc</artifactId>
         <version>3.51.2.0</version>
     </dependency>
-    <dependency>
-	    <groupId>org.liquibase</groupId>
-	    <artifactId>liquibase-core</artifactId>
-	</dependency>
+	<dependency>
+        <groupId>io.micronaut.liquibase</groupId>
+        <artifactId>micronaut-liquibase</artifactId>
+    </dependency>
 	<dependency>
 	    <groupId>org.hibernate.orm</groupId>
 	    <artifactId>hibernate-community-dialects</artifactId>

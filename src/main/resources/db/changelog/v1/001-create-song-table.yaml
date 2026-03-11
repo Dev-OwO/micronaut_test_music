@@ -4,11 +4,11 @@ databaseChangeLog:
       author: vplay
       changes:
         - createTable:
-            tableName: songs
+            tableName: song
             columns:
               - column:
                   name: id
-                  type: BIGINT
+                  type: INTEGER
                   autoIncrement: true
                   constraints:
                     primaryKey: true

@@ -1,4 +1,10 @@
 databaseChangeLog:
+  - property:
+      name: db.driver
+      value: org.sqlite.JDBC
+  - property:
+      name: db.url
+      value: jdbc:sqlite:./vplay.db
   - include:
       file: v1/001-create-song-table.yaml
       relativeToChangelogFile: true
