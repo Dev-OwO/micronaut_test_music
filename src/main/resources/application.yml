@@ -1,4 +1,3 @@
-#Wed Feb 11 21:36:56 IRKT 2026
 micronaut:
   application:
     name: micronaut_test_music
@@ -27,24 +26,21 @@ datasources:
     driver-class-name: org.sqlite.JDBC
     username: ""
     password: ""
-#    schema-generate: NONE  # Liquibase управляет схемой
+    schema-generate: NONE  # Liquibase управляет схемой
 
 jpa:
   default:
-#    entity-scan:
-#      packages: 'micronaut_test_music.model'
     properties:
       hibernate:
         hbm2ddl:
           auto: none
         dialect: org.hibernate.community.dialect.SQLiteDialect
-        format_sql: true
-        show_sql: true
+        show_sql: true # показывать ли в консоли выполняемые запросы
+#        format_sql: true # форматировать ли выводимые запросы в несколько строк
 
 liquibase:
   datasources:
     default:
-#      enabled: true
       change-log: classpath:db/changelog/db.changelog-master.yaml
 
 #logger:
