@@ -91,6 +91,15 @@
 	    <artifactId>hibernate-community-dialects</artifactId>
 	    <version>7.0.2.Final</version>
 	</dependency>
+	<!-- Для работы с загрузкой файлов -->
+	<dependency>
+	    <groupId>io.micronaut</groupId>
+	    <artifactId>micronaut-http-server</artifactId>
+	</dependency>
+	<dependency>
+        <groupId>io.micronaut.validation</groupId>
+        <artifactId>micronaut-validation</artifactId>
+    </dependency>
   </dependencies>
   
   <build>
