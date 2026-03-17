@@ -118,28 +118,17 @@
 
         <div class="upload-form">
             <!-- Сообщение об ошибке -->
-            <div class="error-message" th:if="${error}" th:text="${error}">
+            <div class="error-message" th:if="${errors}" th:text="${errors}">
                 Ошибка при загрузке
             </div>
 
             <!-- Форма загрузки -->
-            <form action="/add_music_api" method="post" enctype="multipart/form-data">
-                <div class="form-group">
-                    <label for="title">Название песни *</label>
-                    <input type="text" id="title" name="title" required 
-                           placeholder="Введите название песни">
-                </div>
+			<form th:action="@{/add_music_api_dto}" method="POST" enctype="multipart/form-data">
 
                 <div class="form-group">
-                    <label for="artist">Исполнитель *</label>
-                    <input type="text" id="artist" name="artist" required 
-                           placeholder="Введите имя исполнителя">
-                </div>
-
-                <div class="form-group">
-                    <label for="file">Аудиофайл *</label>
-                    <input type="file" id="file" name="fileData" 
-                           accept="audio/*" required>
+                    <label for="songFile">Аудиофайл *</label>
+                    <input type="file" name="songFile"
+                           accept="audio/*">
                     <div class="note">Поддерживаются форматы MP3, WAV, M4A</div>
                 </div>
 
@@ -147,6 +136,32 @@
                     Загрузить песню
                 </button>
             </form>
+						
+			<!-- <form th:action="@{/add_music_api_dto}" th:object="${song}" method="POST" enctype="multipart/form-data">
+				
+				<div class="form-group">
+                    <label for="title">Название песни *</label>
+                    <input th:value="*{title}" type="text" name="title"
+                           placeholder="Введите название песни">
+                </div>
+
+                <div class="form-group">
+                    <label for="artist">Исполнитель *</label>
+                    <input th:value="*{artist}" type="text" name="artist"
+                           placeholder="Введите имя исполнителя">
+                </div>
+
+                <div class="form-group">
+                    <label for="songFile">Аудиофайл *</label>
+                    <input type="file" name="songFile"
+                           accept="audio/*">
+                    <div class="note">Поддерживаются форматы MP3, WAV, M4A</div>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    Загрузить песню
+                </button>
+            </form> -->
 
             <a href="/playlist" class="back-link">← Вернуться к плейлисту</a>
         </div>
