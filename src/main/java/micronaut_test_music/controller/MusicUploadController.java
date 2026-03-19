@@ -1,37 +1,34 @@
 package micronaut_test_music.controller;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
+import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;
-import org.apache.tika.parser.DefaultParser;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.Parser;
 import org.apache.tika.sax.BodyContentHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
 
-import io.micronaut.core.annotation.Nullable;
-import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
-import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Error;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Part;
 import io.micronaut.http.annotation.Post;
-import io.micronaut.http.annotation.RequestBean;
+import io.micronaut.http.annotation.QueryValue;
 import io.micronaut.http.multipart.CompletedFileUpload;
 import io.micronaut.http.uri.UriBuilder;
 import io.micronaut.views.View;
-import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.Valid;
-import micronaut_test_music.dto.SongUploadDto;
+import micronaut_test_music.model.Song;
 import micronaut_test_music.service.SongService;
 
 @Controller
@@ -78,73 +75,71 @@ public class MusicUploadController {
  // ----- с отдельными полями, DTO
     @Get("/add_music")
     @View("add_music_dto")
-    public Map<String, Object> showUploadFormDto() {
+    public Map<String, Object> showUploadFormDto(@QueryValue("error") Optional<String> errorParam) {
         Map<String, Object> model = new HashMap<>();
         model.put("pageTitle", "Загрузить музыку");
-//        model.put("song", new SongUploadDto());
+        errorParam.ifPresent(error -> model.put("errors", error));
+        log.info("есть ли ошибка = " + errorParam.isPresent());
         return model;
     }
     
     @Post(value = "/add_music_api_dto", consumes = MediaType.MULTIPART_FORM_DATA)
-	public HttpResponse<Object> uploadMusicDto(@Part("songFile") @Nullable CompletedFileUpload songFile) {//,  (@Valid @Body SongUploadDto songUploadDto)
+	public HttpResponse<Object> uploadMusicDto(@Part("songFile") CompletedFileUpload songFile) {//,  (@Valid @Body SongUploadDto songUploadDto)
+    	boolean isSave = false;
+    	String error = null;
 	    try {
-	    	
-	    	BodyContentHandler handler = new BodyContentHandler();
-	        Metadata metadata = new Metadata();
-	        ByteArrayInputStream bais = new ByteArrayInputStream(songFile.getBytes());
-	        ParseContext pcontext = new ParseContext();
-	        
-	        //Mp3 parser
-	        AutoDetectParser  Mp3Parser = new  org.apache.tika.parser.AutoDetectParser();
-	        Mp3Parser.parse(bais, handler, metadata, pcontext);
-	        
-	        
-	        log.info("Contents of the document:" + handler.toString());
-	        log.info("Metadata of the document:");
-	        String[] metadataNames = metadata.names();
-
-	        for(String name : metadataNames) {		        
-	        	log.info(name + ": " + metadata.get(name));
-	        }
-	    	
-//	    	byte[] songBytes = songFile.getBytes();
-//	    	log.info("Песня загружена: {}", songBytes == null ? 0 : songBytes.length);
-//	    	SongParser mp = new SongParser();
-//	    	Metadata m = mp.parseSongMetadata(songBytes);
-//	    	log.info(String.join(", ", m.names()));
-//	    	log.info(mp.getFirstKey("title", "dc:title", "TIKA_METADATA_TITLE"));
-//	    	log.info(mp.getFirstKey("creator", "dc:creator", "author", "artist"));
-//	    	log.info(mp.getFirstKey("album"));
-//		    log.info(mp.getFirstKey("genre"));
-//		    log.info(mp.getFirstKey("date", "year"));
-//		    log.info(mp.getFirstKey("duration"));
-//	    	
-//	    	log.info("Песня успешно загружена: {} - {}", mp.getArtist(), mp.getTitle());
-	        
-	        return HttpResponse.redirect(UriBuilder.of("/playlist").build());
-	        
+	    	error = upload(songFile);
+	    	if(error != null)
+	    		log.error(error);
+	    	isSave = error == null;
+	    } catch (IOException e) {
+	    	error = "Проблема с чтением загруженного файла: " + e.getMessage();
+	    	log.error(error, e);
 	    } catch (Exception e) {
-	        
-	        return HttpResponse.redirect(UriBuilder.of("/playlist").build());
+	    	error = "Проблема с распознанием метаданных файла: " + e.getMessage();
+	    	log.error(error, e);
+		}
+	    
+	    if(isSave)
+	    	return HttpResponse.redirect(UriBuilder.of("/playlist").build());
+	    else {
+	    	error = URLEncoder.encode(error, StandardCharsets.UTF_8);
+	    	return HttpResponse.redirect(UriBuilder.of("/add_music?error=" + error).build());
 	    }
 	}
     
-    // обработчик ошибок валидации контроллера
-    @Error(exception = ConstraintViolationException.class)
-    @View("add_music_dto")
-    public Map<String, Object> onValidationError(HttpRequest<?> request, ConstraintViolationException ex) {
-        Map<String, Object> model = new HashMap<>();
+    private String upload(CompletedFileUpload songFile) throws SAXException, TikaException, Exception {
+    	if(songFile == null) {
+    		return "Отсутствует файл";
+    	}
+    	
+    	byte[] fileBytes = songFile.getBytes();
+    	if(!songService.isSong(fileBytes)) {
+    		return "Переданный файл не является музыкой";
+    	}
+    	
+    	Song newSong = songService.addSong(songFile.getBytes());
+    	log.info("Песня успешно загружена: {} - {}", newSong.getArtist(), newSong.getTitle());
         
-        List<String> errors = ex.getConstraintViolations().stream()
-        		.map(v -> v.getPropertyPath() + ": " + v.getMessage())
-        		.collect(Collectors.toList());
-        model.put("errors", String.join("; ", errors));
-        
-        request.getBody(SongUploadDto.class).ifPresent(song -> model.put("song", song));
-        SongUploadDto s = (SongUploadDto)model.get("song");
-        log.info("Песня есть: {} - {}", s.getArtist(), s.getTitle());
-        return model;
+        return null;
     }
+    
+//    // обработчик ошибок валидации контроллера
+//    @Error(exception = ConstraintViolationException.class)
+//    @View("add_music_dto")
+//    public Map<String, Object> onValidationError(HttpRequest<?> request, ConstraintViolationException ex) {
+//        Map<String, Object> model = new HashMap<>();
+//        
+//        List<String> errors = ex.getConstraintViolations().stream()
+//        		.map(v -> v.getPropertyPath() + ": " + v.getMessage())
+//        		.collect(Collectors.toList());
+//        model.put("errors", String.join("; ", errors));
+//        
+//        request.getBody(SongUploadDto.class).ifPresent(song -> model.put("song", song));
+//        SongUploadDto s = (SongUploadDto)model.get("song");
+//        log.info("Песня есть: {} - {}", s.getArtist(), s.getTitle());
+//        return model;
+//    }
 
 //    @Post(value = "/add_music_api", consumes = MediaType.MULTIPART_FORM_DATA)
 //    public HttpResponse<Object> uploadMusic(@Part("artist") String artist,

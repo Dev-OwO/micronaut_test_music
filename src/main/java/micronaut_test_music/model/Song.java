@@ -22,6 +22,7 @@ public class Song {
     private String artist;
 	@Column(nullable = false)
     private String filename;
+	@Column(nullable = false)
     private Integer duration; // длительность в секундах
     @Column(nullable = false)
     private LocalDate addedDate;

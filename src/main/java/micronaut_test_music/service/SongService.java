@@ -1,7 +1,11 @@
 package micronaut_test_music.service;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+
+import org.apache.tika.exception.TikaException;
+import org.xml.sax.SAXException;
 
 import jakarta.inject.Singleton;
 import jakarta.transaction.Transactional;
@@ -41,15 +45,21 @@ public class SongService {
     }
     
     @Transactional
-    public void addSong(byte[] songBytes) throws Exception {
+    public Song addSong(byte[] songBytes) throws Exception {
         if (songBytes == null || songBytes.length == 0)
-        	return;
+        	return null;
         
     	Song song = new Song();
 		song = parser.parseSongMetadata(songBytes, song);
 		song.setAddedDate(LocalDate.now());
+		song.setFilename("filename");
 		
         songRepository.save(song);
+        return song;
+    }
+    
+    public boolean isSong(byte[] songBytes) throws IOException, SAXException, TikaException {
+    	return parser.isAudio(songBytes);
     }
 
     public long getSongCount() {

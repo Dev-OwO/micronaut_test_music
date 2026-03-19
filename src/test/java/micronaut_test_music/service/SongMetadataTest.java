@@ -35,8 +35,6 @@ public class SongMetadataTest {
     	try(InputStream isSong = cl.getResourceAsStream(TEST_SONG)) {
     		byte[] bytes = isSong.readAllBytes();
     		
-//    		System.out.println(String.join("; ", parser.parseAllKeys(bytes)));
-    		
     		Song song = new Song();
     		song = parser.parseSongMetadata(bytes, song);
     		
