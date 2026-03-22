@@ -11,8 +11,8 @@ import jakarta.inject.Inject;
 import micronaut_test_music.model.Song;
 
 @MicronautTest
-public class SongMetadataTest {
-	private static final String TEST_SONG = "static/audio/Luke-Bergs-Shine-Like-The-Sun(chosic.com).mp3";
+public class SongParserTest {
+	static final String TEST_SONG = "static/audio/Luke-Bergs-Shine-Like-The-Sun(chosic.com).mp3";
 
     @Inject
     SongMetadataParser parser;
@@ -26,6 +26,24 @@ public class SongMetadataTest {
     		byte[] buffer = new byte[4];
             int bytesRead = isSong.read(buffer);
             Assertions.assertTrue(bytesRead > 0);
+    	}
+    }
+    
+    @Test
+    void testCheckFileType() throws Exception {
+    	ClassLoader cl = getClass().getClassLoader();
+    	try(InputStream isSong = cl.getResourceAsStream("vtb_vklad_test.pdf")) {
+    		Assertions.assertTrue(isSong != null);
+    		byte[] bytes = isSong.readAllBytes();
+    		Assertions.assertTrue(bytes.length > 0);
+    		Assertions.assertFalse(parser.isAudio(bytes));
+    	}
+    	
+    	try(InputStream isSong = cl.getResourceAsStream("тестовый файл.txt")) {
+    		Assertions.assertTrue(isSong != null);
+    		byte[] bytes = isSong.readAllBytes();
+    		Assertions.assertTrue(bytes.length > 0);
+    		Assertions.assertFalse(parser.isAudio(bytes));
     	}
     }
     

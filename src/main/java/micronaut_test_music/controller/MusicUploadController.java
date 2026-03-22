@@ -35,7 +35,6 @@ import micronaut_test_music.service.SongService;
 public class MusicUploadController {
     
     private static final Logger log = LoggerFactory.getLogger(MusicUploadController.class);
-    private static final String AUDIO_DIR = "/tmp/micronaut_test_music";
     
     private final SongService songService;
 
@@ -114,11 +113,15 @@ public class MusicUploadController {
     	}
     	
     	byte[] fileBytes = songFile.getBytes();
+    	if(fileBytes == null || fileBytes.length == 0) {
+    		return "Отсутствует файл";
+    	}
+    	
     	if(!songService.isSong(fileBytes)) {
     		return "Переданный файл не является музыкой";
     	}
     	
-    	Song newSong = songService.addSong(songFile.getBytes());
+    	Song newSong = songService.addSong(songFile.getBytes(), songFile.getFilename());
     	log.info("Песня успешно загружена: {} - {}", newSong.getArtist(), newSong.getTitle());
         
         return null;
