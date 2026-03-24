@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import io.micronaut.context.annotation.Property;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
 import micronaut_test_music.model.Song;
@@ -19,6 +20,10 @@ import micronaut_test_music.repo.SongRepository;
 
 @MicronautTest
 public class SongServiceTest {
+	@Property(name = "micronaut.router.static-resources.music.paths")
+	private String musicPath;
+	@Property(name = "micronaut.router.static-resources.music.mapping")
+	private String musicUrl;
 	
 	@Inject
     SongService songService;
@@ -40,8 +45,14 @@ public class SongServiceTest {
     		String filename = song.getFilename();
     		
     		Assertions.assertNotNull(filename);
-    		Assertions.assertTrue(filename.matches(SongService.AUDIO_DIR + "/\\d+" + SongService.AUDIO_SUFFIX + ".mp3"));
-    		Path uploadPath = Paths.get(filename);
+    		System.out.println(filename);
+    		String musicUrl = this.musicUrl.replace("**", "");
+    		Assertions.assertTrue(filename.matches(musicUrl + "\\d+" + SongService.AUDIO_SUFFIX + ".mp3"));
+    		
+    		String musicPath = this.musicPath.replace("file:", "");
+    		String filePath = musicPath + "/" + filename.substring(filename.lastIndexOf('/')+1);
+    		System.out.println(filePath);
+    		Path uploadPath = Paths.get(filePath);
     		Assertions.assertTrue(Files.exists(uploadPath));
     		
     		Assertions.assertEquals(1, songRepository.count());
@@ -50,7 +61,8 @@ public class SongServiceTest {
 	
 	@AfterEach
 	void removeAudio() throws IOException {
-		Path uploadPath = Paths.get(SongService.AUDIO_DIR);
+		String musicPath = this.musicPath.replace("file:", "");
+		Path uploadPath = Paths.get(musicPath);
 		if(!Files.exists(uploadPath))
 			return;
 		

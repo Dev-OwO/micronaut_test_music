@@ -19,6 +19,9 @@ micronaut:
       js:
         paths: classpath:static/js
         mapping: /js/**
+      music:
+        paths: file:/tmp/micronaut_test_music
+        mapping: /music/**
   server:
     multipart:
       max-file-size: 10485760  # 10 MB
