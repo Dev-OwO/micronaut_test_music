@@ -10,18 +10,17 @@ import java.util.List;
 import org.apache.tika.exception.TikaException;
 import org.xml.sax.SAXException;
 
-import io.micronaut.context.annotation.Property;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.transaction.Transactional;
+import micronaut_test_music.MusicConfig;
 import micronaut_test_music.model.Song;
 import micronaut_test_music.repo.SongRepository;
 
 @Singleton
 public class SongService {
-	@Property(name = "micronaut.router.static-resources.music.paths")
-	private String musicPath;
-	@Property(name = "micronaut.router.static-resources.music.mapping")
-	private String musicUrl;
+	@Inject
+	private MusicConfig musicConfig;
 	
 	static final String AUDIO_SUFFIX = "_vp";
 	
@@ -74,7 +73,7 @@ public class SongService {
 			throw new IOException("Данные об исполнителе и названии обязательны");
 		
 		fileName = saveAudioFile(songBytes, fileName);
-		String musicUrl = this.musicUrl.replace("**", "");
+		String musicUrl = musicConfig.getMusicUrl();
 		song.setFilename(musicUrl + fileName);
 		song.setAddedDate(LocalDate.now());
 		
@@ -83,7 +82,7 @@ public class SongService {
     }
     
     private String saveAudioFile(byte[] songBytes, String fileName) throws IOException {
-      String musicPath = this.musicPath.replace("file:", "");
+      String musicPath = musicConfig.getMusicPath();
       Path uploadPath = Paths.get(musicPath);
       // Создаём директорию, если не существует
       if (!Files.exists(uploadPath)) {
