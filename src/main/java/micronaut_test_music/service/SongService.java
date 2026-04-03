@@ -69,8 +69,12 @@ public class SongService {
         
     	Song song = new Song();
 		song = parser.parseSongMetadata(songBytes, song);
-		if(song.getArtist() == null || song.getTitle() == null)
-			throw new IOException("Данные об исполнителе и названии обязательны");
+		
+		if(song.getTitle() == null || song.getArtist() == null)
+			throw new RuntimeException("Данные об исполнителе и названии в метаданных обязательны");
+		List<Song> sameSongs = songRepository.findByTitleIgnoreCaseAndArtistIgnoreCase(song.getTitle(), song.getArtist());
+		if(sameSongs != null && !sameSongs.isEmpty())
+			throw new RuntimeException("Такая песня уже есть");
 		
 		fileName = saveAudioFile(songBytes, fileName);
 		String musicUrl = musicConfig.getMusicUrl();

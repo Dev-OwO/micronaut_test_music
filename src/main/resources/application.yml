@@ -29,7 +29,8 @@ micronaut:
 
 datasources:
   default:
-    url: jdbc:sqlite:./vplay.db
+    url: jdbc:sqlite:/tmp/micronaut_test_music/vplay.db
+#    url: jdbc:sqlite:./vplay.db
     driver-class-name: org.sqlite.JDBC
     username: ""
     password: ""

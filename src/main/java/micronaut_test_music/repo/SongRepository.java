@@ -11,4 +11,6 @@ public interface SongRepository extends JpaRepository<Song, Long> {
 
 	@Override
 	List<Song> findAll();
+	
+	List<Song> findByTitleIgnoreCaseAndArtistIgnoreCase(String title, String artist);
 }
